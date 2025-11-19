@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>preview</LangVersion>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+    <PackageReference Include="Antlr4.CodeGenerator" Version="4.13.1" PrivateAssets="all" />
+    <PackageReference Include="Antlr4.Build.Tasks" Version="8.21.0" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Antlr4 Include="Grammar/Monkey.g4"
+            Listener="true"
+            Visitor="true"
+            Package="MonkeyCompiler.Core.Parsing"
+            OutputPath="Grammar/Generated" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Grammar/Generated/**/*.cs" />
+  </ItemGroup>
+
+  <Target Name="GenerateLexerParser" DependsOnTargets="GenerateAntlrCode">
+    <Message Text="Regenerating lexer/parser from Grammar/Monkey.g4" Importance="high" />
+  </Target>
+</Project>
