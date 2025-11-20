@@ -14,5 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/MonkeyCompiler.Core/MonkeyCompiler.Core.csproj" />
+    <ProjectReference Include="../../src/MonkeyCompiler.Cli/MonkeyCompiler.Cli.csproj" />
   </ItemGroup>
 </Project>
