@@ -1,0 +1,7 @@
+**/bin/
+**/obj/
+**/Grammar/Generated/
+/.idea/
+/.vscode/
+*.user
+*.suo
