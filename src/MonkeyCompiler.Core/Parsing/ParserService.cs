@@ -1,4 +1,5 @@
 using Antlr4.Runtime;
+using MonkeyCompiler.Core.Lexing;
 
 namespace MonkeyCompiler.Core.Parsing;
 
@@ -11,17 +12,23 @@ public class ParserService
         var tokenStream = new CommonTokenStream(lexer);
         var parser = new MonkeyParser(tokenStream);
 
-        var errorListener = new MonkeyErrorListener();
+        var lexerErrorListener = new MonkeyLexerErrorListener();
+        var parserErrorListener = new MonkeyErrorListener();
+
         lexer.RemoveErrorListeners();
         parser.RemoveErrorListeners();
-        lexer.AddErrorListener(errorListener);
-        parser.AddErrorListener(errorListener);
+        lexer.AddErrorListener(lexerErrorListener);
+        parser.AddErrorListener(parserErrorListener);
 
         var tree = parser.program();
 
-        if (errorListener.HasErrors)
+        var errors = new List<string>();
+        errors.AddRange(lexerErrorListener.Errors);
+        errors.AddRange(parserErrorListener.Errors);
+
+        if (errors.Count > 0)
         {
-            return new ParserResult(false, treeText: null, errorListener.Errors);
+            return new ParserResult(false, treeText: null, errors);
         }
 
         return new ParserResult(true, tree.ToStringTree(parser), Array.Empty<string>());
@@ -49,6 +56,7 @@ internal sealed class MonkeyErrorListener : BaseErrorListener
     public override void SyntaxError(IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
     {
         var tokenText = offendingSymbol?.Text ?? "<no-token>";
-        Errors.Add($"[L{line}, C{charPositionInLine}] Token '{tokenText}': {msg}");
+        var column = charPositionInLine + 1;
+        Errors.Add($"[L{line}, C{column}] Token '{tokenText}': {msg}");
     }
 }
