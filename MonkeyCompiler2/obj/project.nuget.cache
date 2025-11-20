@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "ku/uznTm91c=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\jeiso\\OneDrive\\Documentos\\TEC\\Cursos\\S8\\Compiladores e interpretes\\MonkeyCompiler2\\MonkeyCompiler2\\MonkeyCompiler2.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jeiso\\.nuget\\packages\\antlr4.runtime.standard\\4.13.1\\antlr4.runtime.standard.4.13.1.nupkg.sha512"
+  ],
+  "logs": []
+}

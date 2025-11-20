@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyCompiler2", "MonkeyCompiler2\MonkeyCompiler2.csproj", "{00D831B8-C4D0-4FC4-A1FE-2BF3212C8CE7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00D831B8-C4D0-4FC4-A1FE-2BF3212C8CE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00D831B8-C4D0-4FC4-A1FE-2BF3212C8CE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00D831B8-C4D0-4FC4-A1FE-2BF3212C8CE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00D831B8-C4D0-4FC4-A1FE-2BF3212C8CE7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

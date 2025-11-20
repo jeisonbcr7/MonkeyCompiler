@@ -1,0 +1,11 @@
+﻿/*
+  Este es un comentario normal.
+  /* ¡Este es un comentario ANIDADO! 
+     Si el compilador fuera básico, fallaría aquí abajo.
+  */
+  Todavía estoy dentro del primer comentario.
+*/
+
+fn main(): void {
+    print("Hola comentarios anidados");
+}
