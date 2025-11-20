@@ -1,7 +1,7 @@
-﻿grammar Monkey;
+grammar Monkey;
 
 // =======================
-// Reglas de PARSER
+// PARSER RULES
 // =======================
 
 program
@@ -73,7 +73,7 @@ statement
     | printStatement
     ;
 
- // let const? identifier : type = expression
+// let const? identifier : type = expression
 letStatement
     : LET CONST? identifier COLON type ASSIGN expression
     ;
@@ -108,9 +108,9 @@ printStatement
 // =======================
 
 // expression : additionExpression comparison
-// comparison : ((< | > | <= | >= | ==) additionExpression)*
+// comparison : ((< | > | <= | >= | == | !=) additionExpression)*
 expression
-    : additionExpression ( (LT | GT | LE | GE | EQEQ) additionExpression )*
+    : additionExpression ( (LT | GT | LE | GE | EQEQ | NEQ) additionExpression )*
     ;
 
 // additionExpression : multiplicationExpression ((+ | -) multiplicationExpression)*
@@ -139,23 +139,21 @@ callExpression
     ;
 
 // primitiveExpression
-//   : integerLiteral
+//   : numericLiteral
 //   | stringLiteral
 //   | charLiteral
+//   | booleanLiteral
 //   | identifier
-//   | true
-//   | false
 //   | ( expression )
 //   | arrayLiteral
 //   | functionLiteral
 //   | hashLiteral
 primitiveExpression
-    : integerLiteral
+    : numericLiteral
     | stringLiteral
     | charLiteral
+    | booleanLiteral
     | identifier
-    | TRUE
-    | FALSE
     | LPAREN expression RPAREN
     | arrayLiteral
     | functionLiteral
@@ -191,7 +189,7 @@ expressionList
 // Reglas auxiliares
 // =======================
 
-integerLiteral
+numericLiteral
     : INTEGER_LITERAL
     ;
 
@@ -203,12 +201,17 @@ charLiteral
     : CHAR_LITERAL
     ;
 
+booleanLiteral
+    : TRUE
+    | FALSE
+    ;
+
 identifier
     : IDENTIFIER
     ;
 
 // =======================
-// LEXER
+// LEXER RULES
 // =======================
 
 // Palabras reservadas
@@ -259,22 +262,27 @@ LBRACK  : '[';
 RBRACK  : ']';
 COMMA   : ',';
 COLON   : ':';
-SEMICOLON : ';'; // por si luego decides usarlos
+SEMICOLON : ';';
 
 // Literales
 
 INTEGER_LITERAL
-    : [0-9]+
+    : '0'
+    | [1-9] [0-9]*
     ;
 
-// 'a'  '\n'  '\''
+// 'a'  '\\n'  '\\''
 CHAR_LITERAL
-    : '\'' ( '\\' . | ~['\\] ) '\''
+    : '\'' ( ESC_SEQ | ~['\\] ) '\''
     ;
 
 // "hola", con escapes básicos
 STRING_LITERAL
-    : '"' ( '\\' . | ~["\\] )* '"'
+    : '"' ( ESC_SEQ | ~["\\] )* '"'
+    ;
+
+fragment ESC_SEQ
+    : '\\' [btnr"'\\]
     ;
 
 // Identificadores (case-sensitive, permite _)
@@ -295,8 +303,21 @@ LINE_COMMENT
     : '//' ~[\r\n]* -> skip
     ;
 
-// Comentario de bloque: /* ... */
-// Nota: esta versión NO soporta comentarios anidados todavía.
-BLOCK_COMMENT
-    : '/*' .*? '*/' -> skip
+// Comentarios de bloque anidados: /* ... */
+BLOCK_COMMENT_START
+    : '/*' -> pushMode(COMMENT_MODE), skip
+    ;
+
+mode COMMENT_MODE;
+
+BLOCK_COMMENT_OPEN
+    : '/*' -> pushMode(COMMENT_MODE), skip
+    ;
+
+BLOCK_COMMENT_END
+    : '*/' -> popMode, skip
+    ;
+
+BLOCK_COMMENT_CONTENT
+    : . -> skip
     ;
