@@ -1,4 +1,5 @@
 using Antlr4.Runtime;
+using MonkeyCompiler.Core.Ast;
 using MonkeyCompiler.Core.Lexing;
 
 namespace MonkeyCompiler.Core.Parsing;
@@ -13,7 +14,7 @@ public class ParserService
         var parser = new MonkeyParser(tokenStream);
 
         var lexerErrorListener = new MonkeyLexerErrorListener();
-        var parserErrorListener = new MonkeyErrorListener();
+        var parserErrorListener = new SyntaxErrorListener();
 
         lexer.RemoveErrorListeners();
         parser.RemoveErrorListeners();
@@ -28,17 +29,20 @@ public class ParserService
 
         if (errors.Count > 0)
         {
-            return new ParserResult(false, treeText: null, errors);
+            return new ParserResult(false, program: null, treeText: null, errors);
         }
 
-        return new ParserResult(true, tree.ToStringTree(parser), Array.Empty<string>());
+        var visitor = new AstBuilderVisitor();
+        var program = visitor.Build(tree);
+
+        return new ParserResult(true, program, tree.ToStringTree(parser), Array.Empty<string>());
     }
 
     public ParserResult ParseFile(string path)
     {
         if (!File.Exists(path))
         {
-            return new ParserResult(false, treeText: null, new[] { $"No se encontró el archivo '{path}'." });
+            return new ParserResult(false, program: null, treeText: null, new[] { $"No se encontró el archivo '{path}'." });
         }
 
         var code = File.ReadAllText(path);
@@ -46,17 +50,4 @@ public class ParserService
     }
 }
 
-public sealed record ParserResult(bool Success, string? TreeText, IReadOnlyList<string> Errors);
-
-internal sealed class MonkeyErrorListener : BaseErrorListener
-{
-    public List<string> Errors { get; } = new();
-    public bool HasErrors => Errors.Count > 0;
-
-    public override void SyntaxError(IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
-    {
-        var tokenText = offendingSymbol?.Text ?? "<no-token>";
-        var column = charPositionInLine + 1;
-        Errors.Add($"[L{line}, C{column}] Token '{tokenText}': {msg}");
-    }
-}
+public sealed record ParserResult(bool Success, ProgramNode? Program, string? TreeText, IReadOnlyList<string> Errors);
