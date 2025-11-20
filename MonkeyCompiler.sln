@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyCompiler.Cli", "src\M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyCompiler.Tests", "tests\MonkeyCompiler.Tests\MonkeyCompiler.Tests.csproj", "{F62E7B1F-3969-4BAA-8893-F754F734290D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonkeyCompiler", "src\MonkeyCompiler\MonkeyCompiler.csproj", "{676D9005-6400-4A2F-99BB-0293C23AC53B}"
+EndProject
 Global
 GlobalSection(SolutionConfigurationPlatforms) = preSolution
 Debug|Any CPU = Debug|Any CPU
@@ -23,5 +25,9 @@ GlobalSection(ProjectConfigurationPlatforms) = postSolution
 {F62E7B1F-3969-4BAA-8893-F754F734290D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 {F62E7B1F-3969-4BAA-8893-F754F734290D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 {F62E7B1F-3969-4BAA-8893-F754F734290D}.Release|Any CPU.Build.0 = Release|Any CPU
+{676D9005-6400-4A2F-99BB-0293C23AC53B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+{676D9005-6400-4A2F-99BB-0293C23AC53B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+{676D9005-6400-4A2F-99BB-0293C23AC53B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+{676D9005-6400-4A2F-99BB-0293C23AC53B}.Release|Any CPU.Build.0 = Release|Any CPU
 EndGlobalSection
 EndGlobal
