@@ -1,13 +1,15 @@
+using MonkeyCompiler.Core.CodeGeneration;
 using MonkeyCompiler.Core.Parsing;
+using MonkeyCompiler.Core.Semantics;
 
 var inputFile = args.Length > 0 ? args[0] : "test.monkey";
 var parser = new ParserService();
-var result = parser.ParseFile(inputFile);
+var parseResult = parser.ParseFile(inputFile);
 
-if (!result.Success)
+if (!parseResult.Success || parseResult.Program is null)
 {
-    Console.WriteLine("❌ Se encontraron errores:");
-    foreach (var error in result.Errors)
+    Console.WriteLine("❌ Se encontraron errores de parseo:");
+    foreach (var error in parseResult.Errors)
     {
         Console.WriteLine(error);
     }
@@ -15,8 +17,23 @@ if (!result.Success)
     return 1;
 }
 
-Console.WriteLine("✅ Parseo exitoso.");
-Console.WriteLine("Árbol (parse tree) en formato plano:");
-Console.WriteLine(result.TreeText);
+var typeChecker = new TypeCheckingVisitor();
+var typeResult = typeChecker.Check(parseResult.Program);
+if (!typeResult.Success)
+{
+    Console.WriteLine("❌ Se encontraron errores de tipos:");
+    foreach (var error in typeResult.Errors)
+    {
+        Console.WriteLine(error);
+    }
 
-return 0;
+    return 1;
+}
+
+Console.WriteLine("✅ Analizador sintáctico y semántico ejecutados correctamente. Generando IL...");
+var generator = new CodeGenerator();
+var generated = generator.Generate(parseResult.Program);
+
+Console.WriteLine("▶ Ejecutando programa Monkey...");
+var exitCode = (int)generated.EntryPoint.Invoke(null, new object[] { Array.Empty<string>() })!;
+return exitCode;
